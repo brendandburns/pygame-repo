@@ -1,0 +1,23 @@
+{
+  "name": "pygame-skulpt",
+  "version": "0.0.1",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "npx http-server ./dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "skulpt": "^1.2.0",
+    "skulpt-pygame-zero": "^0.3.4-alpha2"
+  },
+  "devDependencies": {
+    "raw-loader": "^4.0.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
