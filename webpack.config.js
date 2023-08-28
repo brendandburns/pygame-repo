@@ -1,6 +1,7 @@
 // webpack.config.js
 module.exports = {
-    module: {
+  mode: 'development',
+  module: {
       rules: [
         {
           test: /\.py$/i,

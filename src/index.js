@@ -9,14 +9,26 @@ function builtinRead(x) {
   return Sk.builtinFiles["files"][x];
 }
 
-function component() {
-  const element = document.createElement('div');
+function output(text) {
+  var pre = document.getElementById("output");
+  pre.innerHTML = pre.innerHTML + `<pre>${text}</pre>`;
+}
 
-  // Lodash, currently included via a script, is required for this line to work
-  // element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+function exceptionHandler(err) {
+  console.log(err.nativeError);
+  var pre = document.getElementById("output");
+  pre.innerHTML = pre.innerHTML + err;
+}
+
+function start() {
+  var pre = document.getElementById("output");
+  pre.innerHTML = "";
+  Sk.pre = "output";
 
   Sk.configure({
+    output: output,
     read: PyGameZero.usePyGameZero(builtinRead),
+    uncaughtException: exceptionHandler,
     __future__: Sk.python3,
   });
 
@@ -30,15 +42,12 @@ function component() {
   });
 
   promise.then(
-    () => console.log("success"),
-    (err) => {
-      console.log(err.nativeError);
-      var mypre = document.getElementById("output");
-      mypre.innerHTML = mypre.innerHTML + err;
-    }
+    () => {
+      console.log("success"),
+      document.getElementById("loading").innerHTML = "";
+    },
+    exceptionHandler,
   );
-
-  return element;
 }
 
-document.body.appendChild(component());
+start();
