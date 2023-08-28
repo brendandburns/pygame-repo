@@ -1,4 +1,5 @@
 from pgzrun import *
+from util import Background
 
 WIDTH = 300
 HEIGHT = 300
@@ -12,11 +13,10 @@ dy = 2
 alien = Actor('/images/alien.png')
 alien.pos = 100, 56
 
-print("pygame-zero!")
+bg = Background('/images/bg.jpg', WIDTH, HEIGHT)
 
 def draw():
-    screen.fill((128, 0, 0))
-#    screen.draw.filled_circle((x, y), 30, 'black')
+    bg.draw()
     alien.draw()
 
 def update():
@@ -31,7 +31,7 @@ def update():
     
     alien.pos = x, y
 
-def on_mouse_down(pos, button):
+def on_mouse_down(pos, _button):
     if alien.collide_point(pos):
         print("Eek!")
     else:

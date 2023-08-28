@@ -2,8 +2,16 @@ import 'skulpt'
 import 'skulpt-pygame-zero'
 
 import pythonCode from './game.py'
+import utilCode from './util.py'
 
 function builtinRead(x) {
+  console.log(x);
+  if (x === "./util.py") {
+    return utilCode;
+  }
+  if (x == "./util/__init__.py") {
+    return "";
+  }
   if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
           throw "File not found: '" + x + "'";
   return Sk.builtinFiles["files"][x];
