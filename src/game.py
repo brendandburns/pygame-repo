@@ -1,43 +1,34 @@
 from pgzrun import *
-from util import Background
-
-WIDTH = 800
-HEIGHT = 600
 
 alien = Actor('/images/alien.png')
-alien.pos = WIDTH/2, HEIGHT/2
-alien.dx = 5
-alien.dy = 2
+alien.pos = 100, 56
 
-bg = Background('/images/bg.jpg', WIDTH, HEIGHT)
+WIDTH = 500
+HEIGHT = alien.height + 20
+
+alien.topright = 0, 10
 
 def draw():
-    bg.draw()
+    screen.clear()
     alien.draw()
 
 def update():
-    x = alien.pos[0] + alien.dx
-    y = alien.pos[1] + alien.dy
+    alien.left += 2
+    if alien.left > WIDTH:
+        alien.right = 0
 
-    if x > WIDTH or x < 0:
-        alien.dx = -alien.dx
-    if y > HEIGHT or y < 0:
-        alien.dy = -alien.dy
+def on_mouse_down(pos):
+    if alien.collidepoint(pos):
+        set_alien_hurt()
 
-    alien.angle += 1
-    
-    alien.pos = x, y
 
-def on_mouse_down(pos, _button):
-    if alien.collide_point(pos):
-        print("Eek!")
-    else:
-        print("You missed me!")
+def set_alien_hurt():
+    alien.image = '/images/alien_hurt.png'
+    sound.play('/sounds/eep.wav')
+    clock.schedule_unique(set_alien_normal, 1.0)
 
-def on_key_down(key):
-    pass
 
-def on_key_up(key):
-    pass
+def set_alien_normal():
+    alien.image = '/images/alien.png'
 
 go()

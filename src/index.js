@@ -49,6 +49,11 @@ function start() {
   promise.then(
     () => {
       console.log("success"),
+
+      /** This doesn't work, because of how the go function is injected. Fix this. */
+      document.getElementById("stage").style.width = `${Sk.globals.WIDTH.v}px`;
+      document.getElementById("stage").style.height = `${Sk.globals.HEIGHT.v}px`;
+
       document.getElementById("loading").innerHTML = "";
     },
     exceptionHandler,
