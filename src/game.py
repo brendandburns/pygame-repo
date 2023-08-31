@@ -1,34 +1,115 @@
+import pgzrun
+import random
 from pgzrun import *
 
-alien = Actor('/images/alien.png')
-alien.pos = 100, 56
 
-WIDTH = 500
-HEIGHT = alien.height + 20
+TITLE = 'Flappy Bird'
+WIDTH = 400
+HEIGHT = 708
 
-alien.topright = 0, 10
+# These constants control the difficulty of the game
+GAP = 130
+GRAVITY = 0.3
+# GRAVITY = 0.0
+FLAP_STRENGTH = 6.5
+SPEED = 3
 
-def draw():
-    screen.clear()
-    alien.draw()
+bird = Actor('/images/bird1.png', (75, 200))
+bird.dead = False
+bird.score = 0
+bird.vy = 0
+
+bg = Actor('/images/background.png', (WIDTH//2, HEIGHT//2))
+
+# TODO: storage support here
+# storage.setdefault('highscore', 0)
+storage = {}
+storage['highscore'] = 0
+
+def reset_pipes():
+    pipe_gap_y = random.randint(200, HEIGHT - 200)
+    pipe_top.bottomleft = (WIDTH, pipe_gap_y - GAP // 2)
+    pipe_bottom.topleft = (WIDTH, pipe_gap_y + GAP // 2)
+
+# FIX: kwargs for Actor constructor
+pipe_top = Actor('/images/top.png') #, anchor=('left', 'bottom'))
+pipe_bottom = Actor('/images/bottom.png') #, anchor=('left', 'top'))
+reset_pipes()  # Set initial pipe positions.
+
+
+def update_pipes():
+    pipe_top.left -= SPEED
+    pipe_bottom.left -= SPEED
+    if pipe_top.right < 0:
+        reset_pipes()
+        if not bird.dead:
+            print("score!")
+            bird.score += 1
+#            if bird.score > storage['highscore']:
+#                storage['highscore'] = bird.score
+
+
+def update_bird():
+    uy = bird.vy
+    bird.vy += GRAVITY
+    bird.y += (uy + bird.vy) / 2
+    bird.x = 75
+
+#    if not bird.dead:
+#        if bird.vy < -3:
+#            bird.image = '/images/bird2.png'
+#        else:
+#            bird.image = '/images/bird1.png'
+
+    if bird.colliderect(pipe_top) or bird.colliderect(pipe_bottom):
+        bird.dead = True
+#        bird.image = '/images/birddead.png'
+
+    if not 0 < bird.y < 720:
+        bird.y = 200
+        bird.dead = False
+        bird.score = 0
+        bird.vy = 0
+        reset_pipes()
+
 
 def update():
-    alien.left += 2
-    if alien.left > WIDTH:
-        alien.right = 0
-
-def on_mouse_down(pos):
-    if alien.collidepoint(pos):
-        set_alien_hurt()
+    update_pipes()
+    update_bird()
 
 
-def set_alien_hurt():
-    alien.image = '/images/alien_hurt.png'
-    sound.play('/sounds/eep.wav')
-    clock.schedule_unique(set_alien_normal, 1.0)
+# TODO: handle no parameters in callback
+#def on_key_down():
+def on_key_down(key):
+    if not bird.dead:
+        bird.vy = -FLAP_STRENGTH
 
 
-def set_alien_normal():
-    alien.image = '/images/alien.png'
+def draw():
+    # TODO: fix blit
+    # screen.blit('/images/background.png', (0, 0))
+    bg.draw()
+    pipe_top.draw()
+    pipe_bottom.draw()
+    bird.draw()
+    screen.draw.text(str(bird.score), (WIDTH // 2, 50), color='white', fontsize=70)
+# TODO: keyword args for pos, midtop, shadow in text
+#    screen.draw.text(
+#        str(bird.score),
+#        color='white',
+#        midtop=(WIDTH // 2, 10),
+#        fontsize=70,
+#        shadow=(1, 1)
+#    )
+    screen.draw.text(
+        "Best: {}".format(storage['highscore']),
+        (WIDTH // 2, HEIGHT - 30),
+        # TODO: support array as tuple
+        color='blue',
+        midbottom=(WIDTH // 2, HEIGHT - 10),
+        fontsize=30,
+        shadow=(1, 1)
+    )
 
-go()
+
+pgzrun.go()
