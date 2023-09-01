@@ -8,7 +8,7 @@ WIDTH = 400
 HEIGHT = 708
 
 # These constants control the difficulty of the game
-GAP = 130
+GAP = 230
 GRAVITY = 0.3
 # GRAVITY = 0.0
 FLAP_STRENGTH = 6.5
@@ -43,10 +43,9 @@ def update_pipes():
     if pipe_top.right < 0:
         reset_pipes()
         if not bird.dead:
-            print("score!")
             bird.score += 1
-#            if bird.score > storage['highscore']:
-#                storage['highscore'] = bird.score
+            if bird.score > storage['highscore']:
+                storage['highscore'] = bird.score
 
 
 def update_bird():
@@ -55,15 +54,15 @@ def update_bird():
     bird.y += (uy + bird.vy) / 2
     bird.x = 75
 
-#    if not bird.dead:
-#        if bird.vy < -3:
-#            bird.image = '/images/bird2.png'
-#        else:
-#            bird.image = '/images/bird1.png'
-
-    if bird.colliderect(pipe_top) or bird.colliderect(pipe_bottom):
-        bird.dead = True
-#        bird.image = '/images/birddead.png'
+    if not bird.dead:
+        if bird.colliderect(pipe_top) or bird.colliderect(pipe_bottom):
+            bird.dead = True
+            bird.image = '/images/birddead.png'
+        else:
+            if bird.vy < -3:
+                bird.image = '/images/bird2.png'
+            else:
+                bird.image = '/images/bird1.png'
 
     if not 0 < bird.y < 720:
         bird.y = 200
@@ -88,6 +87,7 @@ def on_key_down(key):
 def draw():
     # TODO: fix blit
     # screen.blit('/images/background.png', (0, 0))
+    screen.clear()
     bg.draw()
     pipe_top.draw()
     pipe_bottom.draw()
