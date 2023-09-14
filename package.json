@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "skulpt": "^1.2.0",
-    "skulpt-pygame-zero": "file:skulpt-pygame-zero-0.3.4.tgz"
+    "skulpt-pygame-zero": "github:brendandburns/skulpt_pygame_zero"
   },
   "devDependencies": {
     "raw-loader": "^4.0.2",
