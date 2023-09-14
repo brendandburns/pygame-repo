@@ -10,7 +10,6 @@ HEIGHT = 708
 # These constants control the difficulty of the game
 GAP = 230
 GRAVITY = 0.3
-# GRAVITY = 0.0
 FLAP_STRENGTH = 6.5
 SPEED = 3
 
@@ -77,17 +76,15 @@ def update():
     update_bird()
 
 
-# TODO: handle no parameters in callback
-#def on_key_down():
-def on_key_down(key):
+def on_key_down():
     if not bird.dead:
         bird.vy = -FLAP_STRENGTH
 
 
 def draw():
+    screen.clear()
     # TODO: fix blit
     # screen.blit('/images/background.png', (0, 0))
-    screen.clear()
     bg.draw()
     pipe_top.draw()
     pipe_bottom.draw()
@@ -103,8 +100,9 @@ def draw():
 #    )
     screen.draw.text(
         "Best: {}".format(storage['highscore']),
-        (WIDTH // 2, HEIGHT - 30),
+        pos=(WIDTH // 2, HEIGHT - 50),
         # TODO: support array as tuple
+        # color=(255, 255, 255),
         color='blue',
         midbottom=(WIDTH // 2, HEIGHT - 10),
         fontsize=30,
